@@ -28,7 +28,6 @@ extern "C"
 #include "Zend/zend_execute.h"
 }
 
-static zend_free_op should_free;
 void include_handler(zval *op1, zend_execute_data *execute_data);
 void eval_handler(zval *op1, zend_execute_data *execute_data);
 int include_or_eval_handler(zend_execute_data *execute_data);
@@ -42,7 +41,7 @@ int include_or_eval_handler(zend_execute_data *execute_data)
 #if (PHP_MAJOR_VERSION == 7 && PHP_MINOR_VERSION < 3)
     inc_filename = zend_get_zval_ptr(opline->op1_type, &opline->op1, execute_data, &should_free, BP_VAR_IS);
 #else
-    inc_filename = zend_get_zval_ptr(opline, opline->op1_type, &opline->op1, execute_data, &should_free, BP_VAR_IS);
+    inc_filename = zend_get_zval_ptr(opline, opline->op1_type, &opline->op1, execute_data);
 #endif
     if (inc_filename != nullptr)
     {

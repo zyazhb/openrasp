@@ -151,7 +151,7 @@ void pre_global_pcntl_exec_COMMAND(OPENRASP_INTERNAL_FUNCTION_PARAMETERS)
     {
         zend_string *delim = zend_string_init(" ", 1, 0);
         zval rst;
-        php_implode(delim, args, &rst);
+        php_implode(delim, Z_ARRVAL_P(args), &rst);
         zend_string_release(delim);
         if (Z_TYPE(rst) == IS_STRING && Z_TYPE_P(command) == IS_STRING)
         {

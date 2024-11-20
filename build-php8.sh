@@ -40,7 +40,7 @@ output_base="$script_base/rasp-php-$(date +%Y-%m-%d)"
 output_ext="$output_base/php${php_zts}/${php_os}-php${php_version}-${php_arch}"
 
 # 编译
-cd agent/php7
+cd agent/php8
 phpize --clean
 phpize
 

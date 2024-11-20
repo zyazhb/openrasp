@@ -38,7 +38,7 @@ extern "C"
 #include "ext/standard/url.h"
 #include "ext/standard/php_string.h"
 #include "ext/standard/php_array.h"
-#include "ext/standard/microtime.h"
+// #include "ext/standard/microtime.h"
 #include "ext/date/php_date.h"
 #include "zend_smart_str.h"
 #include "ext/json/php_json.h"
@@ -394,7 +394,7 @@ bool RaspLoggerEntry::openrasp_log_stream_available(log_appender appender_int)
                 efree(file_path);
                 break;
             }
-            stream = php_stream_open_wrapper(file_path, "a+", REPORT_ERRORS | IGNORE_URL_WIN, nullptr);
+            stream = php_stream_open_wrapper(file_path, "a+", REPORT_ERRORS | IGNORE_URL, nullptr);
             if (stream)
             {
                 if (need_create_file && FAILURE == VCWD_CHMOD(file_path, RASP_LOG_FILE_MODE))

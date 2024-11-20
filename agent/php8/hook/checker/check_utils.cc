@@ -31,13 +31,12 @@ namespace openrasp
 
 void builtin_alarm_info(openrasp::JsonReader &base_json)
 {
-    TSRMLS_FETCH();
     LOG_G(alarm_logger).log(LEVEL_INFO, base_json);
 }
 
 void builtin_policy_info(openrasp::JsonReader &base_json, ulong hash)
 {
-    TSRMLS_FETCH();
+    LOG_G(alarm_logger).log(LEVEL_INFO, base_json);
     bool skip = false;
     if (hash > 0 && slm != nullptr)
     {

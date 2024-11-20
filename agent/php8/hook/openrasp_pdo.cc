@@ -340,7 +340,7 @@ void pdo_error_info_intercept(const openrasp::data::V8Material &v8_material, con
 static void pdo_exception_intercept(const openrasp::data::V8Material &v8_material, const std::string &driver_name, zval *object)
 {
     zval rv;
-    zval *error_info = zend_read_property(php_pdo_get_exception(), object, "errorInfo", sizeof("errorInfo") - 1, 1, &rv);
+    zval *error_info = zend_read_property(php_pdo_get_exception(), Z_OBJ_P(object), "errorInfo", sizeof("errorInfo") - 1, 1, &rv);
     if (nullptr != error_info && Z_TYPE_P(error_info) == IS_ARRAY)
     {
         error_info_check(v8_material, driver_name, error_info);
@@ -350,13 +350,13 @@ static void pdo_exception_intercept(const openrasp::data::V8Material &v8_materia
         if (driver_name == "mysql" ||
             driver_name == "sqlite")
         {
-            zval *code = zend_read_property(php_pdo_get_exception(), object, "code", sizeof("code") - 1, 1, &rv);
+            zval *code = zend_read_property(php_pdo_get_exception(), Z_OBJ_P(object), "code", sizeof("code") - 1, 1, &rv);
             if (nullptr == code)
             {
                 return;
             }
             std::string error_msg;
-            zval *message = zend_read_property(php_pdo_get_exception(), object, "message", sizeof("message") - 1, 1, &rv);
+            zval *message = zend_read_property(php_pdo_get_exception(), Z_OBJ_P(object), "message", sizeof("message") - 1, 1, &rv);
             if (Z_TYPE_P(message) == IS_STRING)
             {
                 error_msg = std::string(Z_STRVAL_P(message));
@@ -376,7 +376,7 @@ static void pdo_exception_intercept(const openrasp::data::V8Material &v8_materia
         }
         else if (driver_name == "pgsql")
         {
-            zval *message = zend_read_property(php_pdo_get_exception(), object, "message", sizeof("message") - 1, 1, &rv);
+            zval *message = zend_read_property(php_pdo_get_exception(), Z_OBJ_P(object), "message", sizeof("message") - 1, 1, &rv);
             if (nullptr != message && Z_TYPE_P(message) == IS_STRING)
             {
                 std::string error_msg = std::string(Z_STRVAL_P(message), Z_STRLEN_P(message));

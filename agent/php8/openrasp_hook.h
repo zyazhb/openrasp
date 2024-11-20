@@ -114,13 +114,13 @@ extern "C"
 
 namespace PriorityType
 {
-enum HookPriority
-{
-    pZero = 0,
-    pFirst = 1,
-    pNormal = 2,
-    pTotal = 3
-};
+    enum HookPriority
+    {
+        pZero = 0,
+        pFirst = 1,
+        pNormal = 2,
+        pTotal = 3
+    };
 }
 static const int MYSQLI_STORE_RESULT = 0;
 static const int MYSQLI_USE_RESULT = 1;
@@ -152,37 +152,36 @@ typedef void (*php_function)(INTERNAL_FUNCTION_PARAMETERS);
  * 在函数体的适当位置添加 origin_function(INTERNAL_FUNCTION_PARAM_PASSTHRU); 可继续执行原始函数
  * 执行原始函数前，可调用 zend_get_parameters 等函数获取参数信息
  * 执行原始函数后，可查看 return_value 变量获取返回信息
- * 
+ *
  * @param name 函数完整名称
  * @param scope 函数所属 class，全局函数的 scope 为 global
  */
-#define DEFINE_HOOK_HANDLER_EX(name, scope, type)                                                                         \
-    void scope##_##name##_##type##_handler()                                                                              \
-    {                                                                                                                     \
-        HashTable *ht = nullptr;                                                                                          \
-        zend_function *function;                                                                                          \
-        if (strcmp("global", ZEND_TOSTR(scope)) == 0)                                                                     \
-        {                                                                                                                 \
-            ht = CG(function_table);                                                                                      \
-        }                                                                                                                 \
-        else                                                                                                              \
-        {                                                                                                                 \
-            zend_class_entry *clazz;                                                                                      \
-            std::string scope_str(ZEND_TOSTR(scope));                                                                     \
-            openrasp::string_replace(scope_str, ZEND_TOSTR(BACKSLASH_IN_CLASS), "\\");                                    \
-            if ((clazz = static_cast<zend_class_entry *>(                                                                 \
-                     zend_hash_str_find_ptr(CG(class_table), scope_str.c_str(), scope_str.length()))) != NULL)            \
-            {                                                                                                             \
-                ht = &(clazz->function_table);                                                                            \
-            }                                                                                                             \
-        }                                                                                                                 \
-        if (ht &&                                                                                                         \
-            (function = static_cast<zend_function *>(zend_hash_str_find_ptr(ht, ZEND_STRL(ZEND_TOSTR(name))))) != NULL && \
-            function->internal_function.handler != zif_display_disabled_function)                                         \
-        {                                                                                                                 \
-            origin_##scope##_##name##_##type = function->internal_function.handler;                                       \
-            function->internal_function.handler = hook_##scope##_##name##_##type;                                         \
-        }                                                                                                                 \
+#define DEFINE_HOOK_HANDLER_EX(name, scope, type)                                                                       \
+    void scope##_##name##_##type##_handler()                                                                            \
+    {                                                                                                                   \
+        HashTable *ht = nullptr;                                                                                        \
+        zend_function *function;                                                                                        \
+        if (strcmp("global", ZEND_TOSTR(scope)) == 0)                                                                   \
+        {                                                                                                               \
+            ht = CG(function_table);                                                                                    \
+        }                                                                                                               \
+        else                                                                                                            \
+        {                                                                                                               \
+            zend_class_entry *clazz;                                                                                    \
+            std::string scope_str(ZEND_TOSTR(scope));                                                                   \
+            openrasp::string_replace(scope_str, ZEND_TOSTR(BACKSLASH_IN_CLASS), "\\");                                  \
+            if ((clazz = static_cast<zend_class_entry *>(                                                               \
+                     zend_hash_str_find_ptr(CG(class_table), scope_str.c_str(), scope_str.length()))) != NULL)          \
+            {                                                                                                           \
+                ht = &(clazz->function_table);                                                                          \
+            }                                                                                                           \
+        }                                                                                                               \
+        if (ht &&                                                                                                       \
+            (function = static_cast<zend_function *>(zend_hash_str_find_ptr(ht, ZEND_STRL(ZEND_TOSTR(name))))) != NULL) \
+        {                                                                                                               \
+            origin_##scope##_##name##_##type = function->internal_function.handler;                                     \
+            function->internal_function.handler = hook_##scope##_##name##_##type;                                       \
+        }                                                                                                               \
     }
 
 #define OPENRASP_HOOK_FUNCTION_PRIORITY_EX(name, scope, type, priority)                                          \

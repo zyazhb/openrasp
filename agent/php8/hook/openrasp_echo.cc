@@ -26,7 +26,6 @@ extern "C"
 #include "Zend/zend_execute.h"
 }
 
-static zend_free_op should_free;
 
 int echo_print_handler(zend_execute_data *execute_data)
 {
@@ -34,7 +33,7 @@ int echo_print_handler(zend_execute_data *execute_data)
 #if (PHP_MAJOR_VERSION == 7 && PHP_MINOR_VERSION < 3)
     zval *inc_filename = zend_get_zval_ptr(opline->op1_type, &opline->op1, execute_data, &should_free, BP_VAR_IS);
 #else
-    zval *inc_filename = zend_get_zval_ptr(opline, opline->op1_type, &opline->op1, execute_data, &should_free, BP_VAR_IS);
+    zval *inc_filename = zend_get_zval_ptr(opline, opline->op1_type, &opline->op1, execute_data);
 #endif
     if (inc_filename != nullptr &&
         !openrasp_check_type_ignored(XSS_ECHO) &&
